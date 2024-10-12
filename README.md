@@ -9,4 +9,4 @@ This will guide you through the process of creating a **Ballerina REST API** tha
 ## Architecture
 
 The following diagram illustrates the architecture of the **Social Media REST service**:
-![Architecture Diagram]([URL_TO_YOUR_IMAGE](https://github.com/IshanHansaka/social-media-service/blob/main/image/social-media-architecture.png))
+![Architecture Diagram](https://github.com/IshanHansaka/social-media-service/blob/main/image/social-media-architecture.png)
