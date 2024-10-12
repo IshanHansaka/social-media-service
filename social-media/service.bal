@@ -53,4 +53,8 @@ service /api on new http:Listener(9090) {
         _ = postsTable.removeIfHasKey(id);
         return http:NO_CONTENT;
     }
+
+    resource function get posts/[int id]/meta() returns PostWithMeta|http:NotFound {
+        return postsTable.hasKey(id) ? transformPost(postsTable.get(id)) : http:NOT_FOUND;
+    }
 }

@@ -1,4 +1,5 @@
 import ballerina/http;
+
 type Post record {|
     readonly int id;
     int userId;
@@ -18,3 +19,25 @@ type PostCreated record {|
     *http:Created;
     Post body;
 |};
+
+type Meta record {|
+    string[] tags;
+    string category;
+|};
+
+type PostWithMeta record {|
+    int id;
+    int userId;
+    string description;
+    Meta meta;
+|};
+
+function transformPost(Post post) returns PostWithMeta => {
+    id: post.id,
+    userId: post.userId,
+    description: post.description,
+    meta: {
+        tags: re `,`.split(post.tags),
+        category: post.category
+    }
+};
