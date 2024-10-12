@@ -23,8 +23,8 @@ service /api on new http:Listener(9090) {
         if category is string && category != "" {
             // Filter posts based on the category
             return from Post post in postsTable
-                   where post.category == category
-                   select post;
+                where post.category == category
+                select post;
         }
         // Return all posts if category is not provided or category is Nil
         return postsTable.toArray();
@@ -32,5 +32,17 @@ service /api on new http:Listener(9090) {
 
     resource function get posts/[int id]() returns Post|http:NotFound {
         return postsTable.hasKey(id) ? postsTable.get(id) : http:NOT_FOUND;
+    }
+
+    resource function post posts(NewPost newPost) returns PostCreated {
+        int id = postsTable.nextKey();
+        Post post = {
+            id,
+            ...newPost
+        };
+        postsTable.add(post);
+        return {
+            body: post
+        };
     }
 }
