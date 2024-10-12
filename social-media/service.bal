@@ -22,7 +22,7 @@ service /api on new http:Listener(9090) {
     http:Client sentimentClient;
 
     function init() returns error? {
-        self.sentimentClient = check new("http://localhost:9000/api");
+        self.sentimentClient = check new ("http://localhost:9000/api");
     }
 
     resource function get posts(string? category) returns Post[] {
