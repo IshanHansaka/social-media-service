@@ -19,6 +19,12 @@ table<Post> key(id) postsTable = table [
 
 service /api on new http:Listener(9090) {
 
+    http:Client sentimentClient;
+
+    function init() returns error? {
+        self.sentimentClient = check new("http://localhost:9000/api");
+    }
+
     resource function get posts(string? category) returns Post[] {
         if category is string && category != "" {
             // Filter posts based on the category
@@ -34,14 +40,19 @@ service /api on new http:Listener(9090) {
         return postsTable.hasKey(id) ? postsTable.get(id) : http:NOT_FOUND;
     }
 
-    resource function post posts(NewPost newPost) returns PostCreated {
+    resource function post posts(NewPost newPost) returns PostCreated|http:BadRequest|error {
+        Sentiment sentiment = check self.sentimentClient->/sentiment.post({text: newPost.description});
+        if sentiment.label == "neg" {
+            return http:BAD_REQUEST;
+        }
+
         int id = postsTable.nextKey();
         Post post = {
             id,
             ...newPost
         };
         postsTable.add(post);
-        return {
+        return <PostCreated>{
             body: post
         };
     }
