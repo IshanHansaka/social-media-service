@@ -25,9 +25,12 @@ service /api on new http:Listener(9090) {
             return from Post post in postsTable
                    where post.category == category
                    select post;
-        } else {
-            // Return all posts if category is not provided or category is Nil
-            return postsTable.toArray();
         }
+        // Return all posts if category is not provided or category is Nil
+        return postsTable.toArray();
+    }
+
+    resource function get posts/[int id]() returns Post|http:NotFound {
+        return postsTable.hasKey(id) ? postsTable.get(id) : http:NOT_FOUND;
     }
 }
