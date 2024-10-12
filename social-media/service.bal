@@ -45,4 +45,12 @@ service /api on new http:Listener(9090) {
             body: post
         };
     }
+
+    resource function delete posts/[int id]() returns http:NoContent|http:NotFound|error {
+        if !postsTable.hasKey(id) {
+            return http:NOT_FOUND;
+        }
+        _ = postsTable.removeIfHasKey(id);
+        return http:NO_CONTENT;
+    }
 }
